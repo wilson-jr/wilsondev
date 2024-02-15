@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Map with Leaflet.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" rel="stylesheet">
+
+  <!-- CSS to style the map container -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Map container -->
+  <div id="map"></div>
+
+  <script>
+    // Initialize the map
+    var map = L.map('map', {
+      center: [0, 0],
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 4
+    });
+
+    // Get the width and height of the image
+    var imageWidth = 10000; // Replace with the actual width of the image
+    var imageHeight = 5257; // Replace with the actual height of the image
+
+    // Calculate the aspect ratio of the image
+    var aspectRatio = imageWidth / imageHeight;
+
+    // Calculate the latitude and longitude bounds based on the aspect ratio
+    var southWest = L.latLng(-90, -180 * aspectRatio);
+    var northEast = L.latLng(90, 180 * aspectRatio);
+    var bounds = L.latLngBounds(southWest, northEast);
+
+    // Load and display the image overlay with the calculated bounds
+    L.imageOverlay('https://cdn.discordapp.com/attachments/968624439874961478/1195019614808190976/3.png', bounds).addTo(map);
+
+    // Set the max bounds of the map
+    map.setMaxBounds(bounds);
+
+    // Restrict the map view
+    map.on('drag', function () {
+      map.panInsideBounds(bounds, {
+        animate: false
+      });
+    });
+
+    // Set the initial view of the map
+    map.setView([0, 0], 2);
+  </script>
+
+  <!-- Зоны и территории -->
+  <script>
+    var polygon = L.polygon([
+      [-7.536764, -20.039063],
+      [-11.005904, -31.816406],
+      [1.669686, -30.585938]
+    ]).addTo(map);
+
+
+    polygon.bindPopup("Привет! Я пораженная радиацией зона!");
+
+    var popup = L.popup();
+
+    function onMapClick(e) {
+      popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString() + " with zoom level " + map.getZoom())
+        .openOn(map);
+    }
+
+    map.on('click', onMapClick);
+  </script>
+
+  <!-- Логотип -->
+  <script>
+    L.Control.Watermark = L.Control.extend({
+      onAdd: function (map) {
+        var img = L.DomUtil.create('img');
+
+        img.src = 'https://cdn.discordapp.com/attachments/968624439874961478/1197593922164236388/VC3.png';
+        img.style.width = '200px';
+
+        return img;
+      },
+
+      onRemove: function (map) {
+        // Nothing to do here
+      }
+    });
+
+    L.control.watermark = function (opts) {
+      return new L.Control.Watermark(opts);
+    }
+
+    L.control.watermark({
+      position: 'bottomleft'
+    }).addTo(map);
+  </script>
+
+  <!-- Иконки на карте -->
+  <script>
+    var Cubithland = L.icon({
+      iconUrl: 'https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1568-ferris-wheel_4x.png&highlight=ffd600,ff000000&scale=2.0',
+
+      iconSize: [28, 28], // size of the icon
+
+    });
+
+    // 
+
+    var cubithland = L.marker([-26.273714, -117.421875], {icon: Cubithland}).addTo(map);
+
+    cubithland.bindPopup("<b>Кубитленд</b><br>Тематический парк с семейными аттракционами, костюмированными персонажами и отелями.");
+  </script>
+</body>
+
+</html>
