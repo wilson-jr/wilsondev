@@ -47,7 +47,7 @@
 
   <div id="map"></div>
 
-  <script src="mapdata.js"></script>
+  <script src="/mapdata.js"></script>
 
   <!-- ОПРЕДЕЛЕНИЕ КАРТЫ, ПОЛИГОНОВ И МАРКЕРОВ -->
   <script>
@@ -67,7 +67,7 @@
     var northEast = L.latLng(90, 180 * aspectRatio);
     var bounds = L.latLngBounds(southWest, northEast);
 
-    L.imageOverlay('forsakenworldmap.png', bounds).addTo(map);
+    L.imageOverlay('/forsakenworldmap.png', bounds).addTo(map);
     map.setMaxBounds(bounds);
     map.on('drag', function () {
       map.panInsideBounds(bounds, { animate: false });
